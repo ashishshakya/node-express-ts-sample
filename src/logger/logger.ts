@@ -19,6 +19,10 @@ class Logger {
     this.logger.info(this.getPrefix('info'), ...args);
   };
 
+  debug = (...args: unknown[]) => {
+    this.logger.debug(this.getPrefix('debug'), ...args);
+  };
+
   warn = (...args: unknown[]) => {
     this.logger.warn(this.getPrefix('warn'), ...args);
   };
