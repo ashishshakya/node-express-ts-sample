@@ -19,7 +19,7 @@ class MigrationHelper {
 
     const umzug = new Umzug({
       migrations: {
-        glob: ['../migrations/*.up.sql', { cwd: __dirname }], // zz-TODO
+        glob: ['../migrations/*.up.sql', { cwd: __dirname }],
         resolve: ({ name, path, context: sequelizeInstance }) => {
           return {
             name,

@@ -2,7 +2,6 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import helmet from 'helmet';
-import dotenv from 'dotenv';
 
 import Logger from './logger/logger';
 import getLogger from './logger';
@@ -20,7 +19,6 @@ class App {
   private migrationHelper: MigrationHelper;
 
   constructor(routers: IRouter[], port: number) {
-    dotenv.config();
     this.logger = getLogger('App');
     this.app = express();
     this.port = port;

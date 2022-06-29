@@ -1,13 +1,16 @@
 import { Sequelize } from 'sequelize';
 import * as mysql2 from 'mysql2';
 import Logger from '../logger/logger';
+import SystemSettings from '../system-settings/system-settings';
 
 class DbDriver {
   private logger: Logger;
   private sequelize: Sequelize;
+  private systemSettings: SystemSettings;
 
-  constructor({ logger }) {
+  constructor({ logger, systemSettings }) {
     this.logger = logger;
+    this.systemSettings = systemSettings;
   }
 
   getDBConnection = async () => {
@@ -20,24 +23,29 @@ class DbDriver {
 
   private connectToDatabase = async () => {
     try {
-      const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
-        dialect: 'mysql',
-        dialectModule: mysql2,
-        dialectOptions: {
-          connectTimeout: 30000,
+      const sequelize = new Sequelize(
+        this.systemSettings.dbName,
+        this.systemSettings.dbUser,
+        this.systemSettings.dbPassword,
+        {
+          dialect: 'mysql',
+          dialectModule: mysql2,
+          dialectOptions: {
+            connectTimeout: 30000,
+          },
+          pool: {
+            max: 5,
+            min: 1,
+            acquire: 30000,
+            idle: 10000,
+          },
+          host: this.systemSettings.dbHost,
+          logging: (sql) => {
+            this.logger.info(sql);
+          },
+          port: this.systemSettings.dbPort,
         },
-        pool: {
-          max: 5,
-          min: 1,
-          acquire: 30000,
-          idle: 10000,
-        },
-        host: process.env.DB_HOST,
-        logging: (sql) => {
-          this.logger.info(sql);
-        },
-        port: Number.parseInt(process.env.DB_PORT),
-      });
+      );
       await sequelize.authenticate();
       return sequelize;
     } catch (err) {
