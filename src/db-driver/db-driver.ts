@@ -13,6 +13,7 @@ class DbDriver {
   getDBConnection = async () => {
     if (!this.sequelize) {
       this.sequelize = await this.connectToDatabase();
+      this.logger.info('Successfully established DB Connection');
     }
     return this.sequelize;
   };
@@ -23,10 +24,16 @@ class DbDriver {
         dialect: 'mysql',
         dialectModule: mysql2,
         dialectOptions: {
-          connectTimeout: 25000,
+          connectTimeout: 30000,
+        },
+        pool: {
+          max: 5,
+          min: 1,
+          acquire: 30000,
+          idle: 10000,
         },
         host: process.env.DB_HOST,
-        logging: this.logger.log,
+        logging: this.logger.info,
         port: Number.parseInt(process.env.DB_PORT),
       });
       await sequelize.authenticate();
