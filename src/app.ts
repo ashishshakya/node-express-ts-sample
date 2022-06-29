@@ -5,7 +5,7 @@ import helmet from 'helmet';
 
 import Logger from './logger/logger';
 import getLogger from './logger';
-import IRouter from './interfaces/IRouter';
+import IRouter from './interfaces/router.interface';
 import DbDriver from './db-driver/db-driver';
 import dbDriver from './db-driver';
 import MigrationHelper from './migration-helper/migration-helper';

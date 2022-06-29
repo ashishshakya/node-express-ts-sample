@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import IRouter from '../../interfaces/IRouter';
+import IRouter from '../../interfaces/router.interface';
 import Logger from '../../logger/logger';
 import UserManagementController from './user-management.controller';
 
