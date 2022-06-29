@@ -9,12 +9,15 @@ import getLogger from './logger';
 import IRouter from './interfaces/IRouter';
 import DbDriver from './db-driver/db-driver';
 import dbDriver from './db-driver';
+import MigrationHelper from './migration-helper/migration-helper';
+import migrationHelper from './migration-helper';
 
 class App {
   private app: express.Application;
   private port: number;
   private logger: Logger;
   private dbDriver: DbDriver;
+  private migrationHelper: MigrationHelper;
 
   constructor(routers: IRouter[], port: number) {
     dotenv.config();
@@ -22,6 +25,7 @@ class App {
     this.app = express();
     this.port = port;
     this.dbDriver = dbDriver;
+    this.migrationHelper = migrationHelper;
 
     this.uncaughtExceptionHandler();
     this.initializeMiddlewares();
@@ -41,8 +45,9 @@ class App {
     });
   };
 
-  initializeDbConnection = async () => {
+  initializeDbConnectionAndExecuteMigrations = async () => {
     await this.dbDriver.getDBConnection();
+    await this.migrationHelper.executeMigrations();
   };
 
   uncaughtExceptionHandler = () => {
@@ -57,8 +62,9 @@ class App {
       });
   };
 
-  listen = async () => {
-    await this.initializeDbConnection();
+  startServer = async () => {
+    await this.initializeDbConnectionAndExecuteMigrations();
+
     this.app.listen(this.port, () => {
       this.logger.info(`App listening on the port ${this.port}`);
     });

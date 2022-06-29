@@ -1,3 +1,3 @@
 import app from './server';
 
-app.listen();
+app.startServer();

@@ -18,7 +18,7 @@ class DbDriver {
     return this.sequelize;
   };
 
-  connectToDatabase = async () => {
+  private connectToDatabase = async () => {
     try {
       const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASSWORD, {
         dialect: 'mysql',
@@ -33,7 +33,9 @@ class DbDriver {
           idle: 10000,
         },
         host: process.env.DB_HOST,
-        logging: this.logger.info,
+        logging: (sql) => {
+          this.logger.info(sql);
+        },
         port: Number.parseInt(process.env.DB_PORT),
       });
       await sequelize.authenticate();
