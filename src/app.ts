@@ -3,13 +3,15 @@ import bodyParser from 'body-parser';
 import cors from 'cors';
 import helmet from 'helmet';
 
+import IRouter from './interfaces/router.interface';
 import Logger from './logger/logger';
 import getLogger from './logger';
-import IRouter from './interfaces/router.interface';
 import DbDriver from './db-driver/db-driver';
 import dbDriver from './db-driver';
 import MigrationHelper from './migration-helper/migration-helper';
 import migrationHelper from './migration-helper';
+import DbModelHelper from './models/db-model-helper';
+import dbModelHelper from './models';
 
 class App {
   private app: express.Application;
@@ -17,6 +19,7 @@ class App {
   private logger: Logger;
   private dbDriver: DbDriver;
   private migrationHelper: MigrationHelper;
+  private dbModelHelper: DbModelHelper;
 
   constructor(routers: IRouter[], port: number) {
     this.logger = getLogger('App');
@@ -24,6 +27,7 @@ class App {
     this.port = port;
     this.dbDriver = dbDriver;
     this.migrationHelper = migrationHelper;
+    this.dbModelHelper = dbModelHelper;
 
     this.uncaughtExceptionHandler();
     this.initializeMiddlewares();
@@ -46,6 +50,7 @@ class App {
   initializeDbConnectionAndExecuteMigrations = async () => {
     await this.dbDriver.getDBConnection();
     await this.migrationHelper.executeMigrations();
+    await this.dbModelHelper.initializeDBModels();
   };
 
   uncaughtExceptionHandler = () => {

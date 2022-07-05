@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import Logger from '../../logger/logger';
+import { IUser } from '../../models/user.model';
 import UserManagementService from './user-management.service';
 
 class UserManagementController {
@@ -24,7 +25,6 @@ class UserManagementController {
   getUserById = async (request: Request, response: Response) => {
     try {
       const userId = parseInt(request.params.userId);
-      this.logger.log('userID', userId);
       const user = await this.userManagementService.getUserById(userId);
       response.json(user);
     } catch (error) {
@@ -35,7 +35,9 @@ class UserManagementController {
 
   createUser = async (request: Request, response: Response) => {
     try {
-      response.status(201).json({ status: 'Success' });
+      const userDetails: IUser = request.body;
+      const result = await this.userManagementService.createUser(userDetails);
+      response.status(201).json(result);
     } catch (error) {
       this.logger.error('createUser', error);
       response.status(error.status || 500).send({ error });

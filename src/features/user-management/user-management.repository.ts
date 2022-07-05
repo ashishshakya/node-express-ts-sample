@@ -1,5 +1,6 @@
 import DbDriver from '../../db-driver/db-driver';
 import Logger from '../../logger/logger';
+import { IUser, User } from '../../models/user.model';
 
 class UserManagementRepository {
   private logger: Logger;
@@ -11,19 +12,19 @@ class UserManagementRepository {
   }
 
   getAllUsers = async () => {
-    // const sequelize = await this.dbDriver.getDBConnection();
-    // this.logger.log('sequelize', sequelize);
-    return [
-      { id: 1, name: 'One' },
-      { id: 2, name: 'Two' },
-    ];
+    return User.findAndCountAll();
   };
 
   getUserById = async (userId: number) => {
-    // const sequelize = await this.dbDriver.getDBConnection();
-    // this.logger.log('sequelize', sequelize);
-    this.logger.log('userID', userId);
-    return { id: 1, name: 'One' };
+    return User.findOne({
+      where: {
+        userId,
+      },
+    });
+  };
+
+  createUser = async (userDetails: IUser) => {
+    return User.create(userDetails);
   };
 }
 

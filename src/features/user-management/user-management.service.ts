@@ -1,4 +1,5 @@
 import Logger from '../../logger/logger';
+import { IUser } from '../../models/user.model';
 import UserManagementRepository from './user-management.repository';
 
 class UserManagementService {
@@ -15,8 +16,11 @@ class UserManagementService {
   };
 
   getUserById = async (userId: number) => {
-    this.logger.log('userID', userId);
     return this.userManagementRepository.getUserById(userId);
+  };
+
+  createUser = async (userDetails: IUser) => {
+    return this.userManagementRepository.createUser(userDetails);
   };
 }
 
