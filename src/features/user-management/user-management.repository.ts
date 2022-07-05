@@ -5,18 +5,20 @@ import { IUser, User } from '../../models/user.model';
 class UserManagementRepository {
   private logger: Logger;
   private dbDriver: DbDriver;
+  private UserModel: typeof User;
 
-  constructor({ logger, dbDriver }) {
+  constructor({ logger, dbDriver, UserModel }) {
     this.logger = logger;
     this.dbDriver = dbDriver;
+    this.UserModel = UserModel;
   }
 
   getAllUsers = async () => {
-    return User.findAndCountAll();
+    return this.UserModel.findAndCountAll();
   };
 
   getUserById = async (userId: number) => {
-    return User.findOne({
+    return this.UserModel.findOne({
       where: {
         userId,
       },
@@ -24,7 +26,7 @@ class UserManagementRepository {
   };
 
   createUser = async (userDetails: IUser) => {
-    return User.create(userDetails);
+    return this.UserModel.create(userDetails);
   };
 }
 

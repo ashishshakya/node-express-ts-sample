@@ -26,7 +26,7 @@ class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
   deletedBy: number | null;
 }
 
-export default function buildUserModel(sequelize: Sequelize) {
+const buildUserModel = (sequelize: Sequelize) => {
   User.init(
     {
       userId: {
@@ -95,6 +95,7 @@ export default function buildUserModel(sequelize: Sequelize) {
       tableName: 'users',
     },
   );
-}
+};
 
+export default buildUserModel;
 export { User, IUser };
