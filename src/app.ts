@@ -41,10 +41,10 @@ class App {
   };
 
   initializeRoutes = (routers: IRouter[]) => {
-    routers.forEach((router) => {
+    for (const router of routers) {
       this.app.use('/', router.getRouter());
       this.logger.info(`Registered routes for ${router.getFeatureName()}`);
-    });
+    }
   };
 
   initializeDbConnectionAndExecuteMigrations = async () => {

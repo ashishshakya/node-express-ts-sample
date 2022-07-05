@@ -22,9 +22,9 @@ class DbModelHelper {
   initializeDBModels = async () => {
     const sequelize = await this.dbDriver.getDBConnection();
 
-    this.dbModelBuilders.forEach((dbModelBuilder) => {
+    for (const dbModelBuilder of this.dbModelBuilders) {
       dbModelBuilder(sequelize);
-    });
+    }
 
     this.logger.info('Successfully created DB Models');
   };
