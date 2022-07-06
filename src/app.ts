@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { NextFunction, Request, Response } from 'express';
 import bodyParser from 'body-parser';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -32,6 +32,7 @@ class App {
     this.uncaughtExceptionHandler();
     this.initializeMiddlewares();
     this.initializeRoutes(routers);
+    this.initializeErrorHandlerMiddleware();
   }
 
   initializeMiddlewares = () => {
@@ -45,6 +46,15 @@ class App {
       this.app.use('/', router.getRouter());
       this.logger.info(`Registered routes for ${router.getFeatureName()}`);
     }
+  };
+
+  initializeErrorHandlerMiddleware = () => {
+    this.app.use((error: unknown, request: Request, response: Response, next: NextFunction) => {
+      if (response.headersSent) {
+        return next(error);
+      }
+      response.status(500).json({ error });
+    });
   };
 
   initializeDbConnectionAndExecuteMigrations = async () => {
