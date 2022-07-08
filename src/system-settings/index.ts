@@ -1,5 +1,6 @@
 import SystemSettings from './system-settings';
 
-const systemSettings = new SystemSettings();
+const processEnv = process.env;
+const systemSettings = new SystemSettings({ processEnv });
 
 export default systemSettings;
